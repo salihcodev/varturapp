@@ -126,11 +126,12 @@ export default defineComponent({
         const response = await fetch(`/api/categories/${id}`);
         if (!response.ok) throw new Error("Failed to fetch category");
 
-        const category = await response.json();
-        formData.value.id = category.id; // Set ID field
-        formData.value.name = category.name;
-        formData.value.picturePreview = category.picture;
-        formData.value.parent_id = category.parent_id;
+        const { data } = await response.json();
+
+        formData.value.id = data.id; // Set ID field
+        formData.value.name = data.name;
+        formData.value.picturePreview = data.picture;
+        formData.value.parent_id = data.parent_id;
       } catch (err: any) {
         error.value = err.message;
       }

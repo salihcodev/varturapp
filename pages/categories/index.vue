@@ -6,7 +6,6 @@
       <span class="text-gray-500">Total Items: </span>
       <span>{{ results }}</span>
     </div>
-    <div v-if="loading" class="mt-4 text-red-500">Deleting...</div>
     <ul v-if="!loading">
       <CategoryNode
         v-for="category in categories"

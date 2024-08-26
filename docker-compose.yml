@@ -12,7 +12,6 @@ services:
 
     volumes:
       - ./:/app
-      - ./node_modules
     depends_on:
       - db
     command: sh -c "npm run prisma:mg init && npm run dev"

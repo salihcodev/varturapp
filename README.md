@@ -127,6 +127,9 @@ cd varturapp
 - You can use `~/bin` directory to jump right inside the project.
   Just open the terminal, Then use one of the following scripts:
 
+**Note** > change DATABASE_URL host to be `db` instead of `localhost` in `.env` file
+if you meant to run inside docker
+
 **Start in normal developing mode:**
 
 ```bash

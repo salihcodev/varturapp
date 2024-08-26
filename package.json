@@ -1,0 +1,26 @@
+{
+  "name": "varturapp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "prisma:mg": "npx prisma migrate dev --name",
+    "prisma:std": "npx prisma studio"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@prisma/client": "^5.18.0",
+    "multer": "1.4.5-lts.1",
+    "nuxt": "^3.12.4",
+    "sharp": "^0.33.5",
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "@types/multer": "^1.4.11",
+    "prisma": "^5.18.0"
+  }
+}

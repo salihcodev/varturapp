@@ -1,0 +1,34 @@
+
+services:
+  varturapp:
+    build: .
+    container_name: web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "24678:24678"  # Ensure this port is mapped correctly
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+
+    volumes:
+      - ./:/app
+      - ./node_modules
+    depends_on:
+      - db
+    command: sh -c "npm run prisma:mg init && npm run dev"
+
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql-data:
+    driver: local

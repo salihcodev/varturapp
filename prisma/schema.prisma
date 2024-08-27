@@ -12,7 +12,7 @@ model Category {
   name      String
   picture   String?
   parent_id Int?
-  parent    Category?  @relation("CategoryToCategory", fields: [parent_id], references: [id])
+  parent    Category?  @relation("CategoryToCategory", fields: [parent_id], references: [id], onDelete: Cascade)
   children  Category[] @relation("CategoryToCategory")
   products  Product[]
 
@@ -25,7 +25,7 @@ model Product {
   name        String
   picture     String?
   category_id Int
-  category    Category @relation(fields: [category_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

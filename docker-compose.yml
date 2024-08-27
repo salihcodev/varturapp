@@ -8,7 +8,7 @@ services:
       - "3000:3000"
       - "24678:24678"  # Ensure this port is mapped correctly
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: 'mysql://root:root@db:3306/varturappdb'
 
     volumes:
       - ./:/app
@@ -23,6 +23,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+
     volumes:
       - mysql-data:/var/lib/mysql
     ports:

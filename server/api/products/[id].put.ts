@@ -46,6 +46,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "OK",
+      statusMessage: "Product successfully updated",
       data: product,
     };
   } catch (error: any) {

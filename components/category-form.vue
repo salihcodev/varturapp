@@ -95,9 +95,8 @@
 <script lang="ts">
 export default defineComponent({
   setup() {
-    const router = useRouter();
     const formData = ref({
-      id: "", // Add ID field
+      id: "",
       name: "",
       picture: null as File | null,
       picturePreview: "" as string | null,
@@ -108,6 +107,7 @@ export default defineComponent({
     const successMessage = ref<string | null>(null);
     const isLoading = ref<boolean>(false);
     const isEditing = ref<boolean>(false);
+    const toUpdatedid = ref<number | null>(null);
     const fileInputKey = ref(0);
 
     onMounted(() => {
@@ -116,6 +116,7 @@ export default defineComponent({
         const id = url.searchParams.get("id");
         if (id) {
           isEditing.value = true;
+          toUpdatedid.value = id;
           fetchCategory(id);
         }
       }
@@ -124,9 +125,9 @@ export default defineComponent({
     const fetchCategory = async (id: string) => {
       try {
         const response = await fetch(`/api/categories/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch category");
-
-        const { data } = await response.json();
+        const { data, statusMessage } = await response.json();
+        if (!response.ok) throw new Error(statusMessage);
+        successMessage.value = statusMessage;
 
         formData.value.id = data.id; // Set ID field
         formData.value.name = data.name;
@@ -134,6 +135,11 @@ export default defineComponent({
         formData.value.parent_id = data.parent_id;
       } catch (err: any) {
         error.value = err.message;
+      } finally {
+        setTimeout(() => {
+          error.value = null;
+          successMessage.value = null;
+        }, 3000);
       }
     };
 
@@ -171,13 +177,13 @@ export default defineComponent({
           body: data,
         });
 
+        const { statusMessage, status, details } = await response.json();
+
         if (!response.ok) {
-          throw new Error("Failed to save category");
+          throw new Error(statusMessage);
         }
 
-        const result = await response.json();
-
-        if (result.status === "OK") {
+        if (status === "OK") {
           successMessage.value = isEditing.value
             ? "Category updated successfully!"
             : "Category created successfully!";
@@ -191,12 +197,17 @@ export default defineComponent({
           };
           fileInputKey.value += 1;
         } else {
-          throw new Error(result.details || "Unknown error");
+          throw new Error(details || "Unknown error");
         }
       } catch (err: any) {
         error.value = err.message;
       } finally {
+        isEditing.value && fetchCategory(toUpdatedid.value);
         isLoading.value = false;
+        setTimeout(() => {
+          error.value = null;
+          successMessage.value = null;
+        }, 3000);
       }
     };
 

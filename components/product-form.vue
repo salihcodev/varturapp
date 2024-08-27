@@ -137,6 +137,7 @@ interface Category {
 export default defineComponent({
   components: { ConfirmModal },
   setup() {
+    const router = useRouter();
     const isOpen = ref(false);
     const isModalOpen = ref(false);
 
@@ -149,12 +150,12 @@ export default defineComponent({
     };
 
     const confirmDelete = () => {
-      console.log(`HIHHIHIHI`);
+      deleteCategory();
       closeModal();
     };
 
     const formData = ref({
-      id: "", // Add ID field
+      id: "",
       name: "",
       picture: null as File | null,
       picturePreview: "" as string | null,
@@ -182,13 +183,37 @@ export default defineComponent({
       }
     });
 
+    const deleteCategory = async () => {
+      try {
+        isLoading.value = true;
+        const response = await fetch(`/api/products/${toUpdatedid.value}`, {
+          method: "DELETE",
+        });
+
+        const { statusMessage } = await response.json();
+
+        if (!response.ok) {
+          throw new Error(statusMessage);
+        }
+        setTimeout(() => {
+          router.push(`/`);
+        }, 3000);
+      } catch (err: any) {
+        error.value = err.message;
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
     const fetchCategory = async (id: string) => {
       try {
-        const response = await fetch(`/api/products/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch product");
+        isLoading.value = true;
 
-        const { data } = await response.json();
-        console.log(data);
+        const response = await fetch(`/api/products/${id}`);
+        const { statusMessage, data } = await response.json();
+
+        if (!response.ok) throw new Error(statusMessage);
+        successMessage.value = statusMessage;
 
         formData.value.id = data.id; // Set ID field
         formData.value.name = data.name;
@@ -196,6 +221,12 @@ export default defineComponent({
         formData.value.category_id = data.category_id;
       } catch (err: any) {
         error.value = err.message;
+      } finally {
+        isLoading.value = false;
+        setTimeout(() => {
+          error.value = null;
+          successMessage.value = null;
+        }, 3000);
       }
     };
 
@@ -233,16 +264,13 @@ export default defineComponent({
           body: data,
         });
 
+        const { statusMessage, status, details } = await response.json();
         if (!response.ok) {
-          throw new Error("Failed to save product");
+          throw new Error(statusMessage);
         }
 
-        const result = await response.json();
-
-        if (result.status === "OK") {
-          successMessage.value = isEditing.value
-            ? "Product updated successfully!"
-            : "Product created successfully!";
+        if (status === "OK") {
+          successMessage.value = statusMessage;
 
           // Reset form data
           if (method === `POST`) {
@@ -262,12 +290,16 @@ export default defineComponent({
           // Reset file input
           fileInputKey.value += 1; // Increment key to force reset
         } else {
-          throw new Error(result.details || "Unknown error");
+          throw new Error(details || "Unknown error");
         }
       } catch (err: any) {
         error.value = err.message;
       } finally {
         isLoading.value = false;
+        setTimeout(() => {
+          error.value = null;
+          successMessage.value = null;
+        }, 3000);
       }
     };
 
@@ -282,8 +314,8 @@ export default defineComponent({
     const fetchCategories = async (): Promise<void> => {
       try {
         const response = await fetch("/api/categories");
-        const result = await response.json();
-        categories.value = result.data;
+        const { data } = await response.json();
+        categories.value = data;
         buildDropdowns();
       } catch (error) {
         console.error("Failed to fetch categories:", error);

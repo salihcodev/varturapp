@@ -98,6 +98,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "OK",
+      statusMessage: "Successful fetch",
       data: categoriesWithDetails,
       results: _count,
     };

@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "OK",
+      statusMessage: "Category successfully created",
       data: category,
     };
   } catch (error: any) {

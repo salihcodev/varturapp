@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "OK",
+      statusMessage: "Product successfully created",
       data: product,
     };
   } catch (error: any) {

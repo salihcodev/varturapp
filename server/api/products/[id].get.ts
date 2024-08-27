@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "success",
+      statusMessage: "Successful fetch",
       data: product,
     };
   } catch (error: any) {

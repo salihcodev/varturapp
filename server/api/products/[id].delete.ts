@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { defineEventHandler, H3Event, createError } from "h3";
 
 const prisma = new PrismaClient();
 
@@ -28,6 +27,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "success",
+      statusMessage: "Product successfully deleted",
       data: deletedProduct,
     };
   } catch (error: any) {

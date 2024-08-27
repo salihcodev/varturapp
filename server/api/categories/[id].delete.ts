@@ -10,12 +10,24 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, statusMessage: "Invalid ID format" });
     }
 
+    // Check if the category exists
+    const categoryExists = await prisma.category.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!categoryExists) {
+      throw createError({ statusCode: 404, statusMessage: "Category not found" });
+    }
+
     const deletedCategory = await prisma.category.delete({
       where: { id },
     });
 
     return {
-      status: "OK",
+      status: "success",
+      statusMessage: "Category successfully deleted",
       data: deletedCategory,
     };
   } catch (error: any) {

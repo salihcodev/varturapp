@@ -16,8 +16,9 @@ export default defineEventHandler(async () => {
 
     return {
       status: "OK",
+      statusMessage: "Successful fetch",
       data: products,
-      results: _count, // Corrected spelling from "resualts" to "results"
+      results: _count,
     };
   } catch (error: any) {
     return createError({

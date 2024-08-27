@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       status: "OK",
+      statusMessage: "Category successfully updated",
       data: updatedCategory,
     };
   } catch (error: any) {
